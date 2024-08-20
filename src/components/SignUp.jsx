@@ -1,37 +1,59 @@
+import { data } from 'autoprefixer';
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { json, useNavigate } from 'react-router-dom'
 
 function SignUp() {
 
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    firstname:"",
-    lastname:"",
-    Email:"",
-    Password:"",
-    AadharCard:"",
-    PanCard:"",
-    MobileNo:"",
-  })
+    "password": "",
+    "mobileNo": 0,
+    "aadharCard": 0,
+    "firstName": "",
+    "panCard": "",
+    "lastName": "",
+    "email": ""
+})
 
-  const submit = () =>{
-    if (form.AadharCard == "" || form.Email == "" || form.MobileNo == "" || form.PanCard == "" || form.Password == ""
-      || form.firstname == "" || form.lastname == "") 
+  const submit = async () =>{
+    if (form.aadharCard == "" || form.email == "" || form.mobileNo == "" || form.panCard == "" || form.password == ""
+      || form.firstName == "" || form.lastName == "") 
     {
       alert("Please fill all fields")
     } else{
-      console.log(form)
-      setForm({
-        firstname:"",
-        lastname:"",
-        Email:"",
-        Password:"",
-        AadharCard:"",
-        PanCard:"",
-        MobileNo:"",
-      })
-      navigate('/Login')
+      
+        try {
+          const response = await fetch("http://localhost:8080/signup", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(form),
+          }
+          )
+          const data = await response.json();
+          
+          setForm({
+            firstName:"",
+            lastName:"",
+            email:"",
+            password:"",
+            aadharCard:"",
+            panCard:"",
+            mobileNo:"",
+          })
+          if (response.ok) {
+            console.log(data); 
+            navigate('/login')
+          }
+          
+        } catch (error) {
+          console.log("error",error);
+          
+        }
+      
+  
     }
     
   }
@@ -43,38 +65,38 @@ function SignUp() {
           <div className='flex  flex-col items-end gap-5 mt-5 '>
 
             <div className=''>
-              <label className='px-4 font-bold text-amber-600' htmlFor="firstname">First Name</label>
-              <input value={form.firstname} onChange={(e)=> setForm({...form, firstname: e.target.value}) } className='border border-amber-500 rounded-xl p-2 bg-amber-300 focus:border-amber-500' id='firstname' type="text" />
+              <label className='px-4 font-bold text-amber-600' htmlFor="firstName">First Name</label>
+              <input value={form.firstName} onChange={(e)=> setForm({...form, firstName: e.target.value}) } className='border border-amber-500 rounded-xl p-2 bg-amber-300 focus:border-amber-500' id='firstName' type="text" />
             </div>
 
             <div>
-              <label className='px-4 font-bold text-amber-600' htmlFor="lastname">Last Name</label>
-              <input value={form.lastname} onChange={(e)=> setForm({...form, lastname: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='lastname' type="text" />
+              <label className='px-4 font-bold text-amber-600' htmlFor="lastName">Last Name</label>
+              <input value={form.lastName} onChange={(e)=> setForm({...form, lastName: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='lastName' type="text" />
             </div>
 
             <div>
-            <label className='px-4 font-bold text-amber-600' htmlFor="AadharCard">Aadhar Card</label>
-            <input value={form.AadharCard} onChange={(e)=> setForm({...form, AadharCard: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='AadharCard' type="number" />
+            <label className='px-4 font-bold text-amber-600' htmlFor="aadharCard">Aadhar Card</label>
+            <input value={form.aadharCard} onChange={(e)=> setForm({...form, aadharCard: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='aadharCard' type="number" />
             </div> 
 
             <div>
-            <label className='px-4 font-bold text-amber-600' htmlFor="PanCard">Pan Card</label>
-            <input value={form.PanCard} onChange={(e)=> setForm({...form, PanCard: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='PanCard' type="text" />
+            <label className='px-4 font-bold text-amber-600' htmlFor="panCard">Pan Card</label>
+            <input value={form.panCard} onChange={(e)=> setForm({...form, panCard: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='panCard' type="text" />
             </div>
 
             <div>
-            <label className='px-4 font-bold text-amber-600' htmlFor="MobileNo">Mobile No</label>
-            <input value={form.MobileNo} onChange={(e)=> setForm({...form, MobileNo: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='MobileNo' type="number" />
+            <label className='px-4 font-bold text-amber-600' htmlFor="mobileNo">Mobile No</label>
+            <input value={form.mobileNo} onChange={(e)=> setForm({...form, mobileNo: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='mobileNo' type="number" />
             </div> 
 
             <div>
-            <label className='px-4 font-bold text-amber-600' htmlFor="Email">Email</label>
-            <input value={form.Email} onChange={(e)=> setForm({...form, Email: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='Email' type="email" />
+            <label className='px-4 font-bold text-amber-600' htmlFor="email">email</label>
+            <input value={form.email} onChange={(e)=> setForm({...form, email: e.target.value}) } className='border rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='email' type="email" />
             </div>
 
             <div>
-            <label className='px-4 font-bold text-amber-600' htmlFor="Password">Password</label>
-            <input value={form.Password} onChange={(e)=> setForm({...form, Password: e.target.value}) } className='border  rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='Password' type="password" />
+            <label className='px-4 font-bold text-amber-600' htmlFor="password">password</label>
+            <input value={form.password} onChange={(e)=> setForm({...form, password: e.target.value}) } className='border  rounded-xl p-2 bg-amber-300 focus:border-amber-500 ' id='password' type="password" />
             </div>
             
             
